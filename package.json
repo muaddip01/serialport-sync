@@ -1,7 +1,7 @@
 {
   "author": "harel.ashwal",
   "name": "serialport-sync",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "serialport sync wrapper",
   "main": "lib/serialport-sync.js",
   "types": "lib/serialport-sync.d.ts",
