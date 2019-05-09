@@ -27,12 +27,14 @@ class SerialPort {
             autoOpen: true,
             baudRate: this.baudRate,
         });
-        const parser = this.port.pipe(new Readline({ delimiter: '\r' }));
+        const parser = this.port.pipe(new ByteLength({ length: 1 }));
         parser.on('data', (data) => {
+            var str = data.toString('utf8');
             if (this.showDebugData)
-                console.log(this.comPort + ' PARSER : ' + data);
-            this.myQueue.enqueue(data);
-            this.LastLine = data;
+                console.log(this.comPort + ' PARSER : ' + str);
+            this.LastLine += str;
+            if (str === '\r')
+                this.myQueue.enqueue(this.LastLine);
             this.currentData = this.ShowExisting();
         });
         await new Promise((resolve, reject) => {
@@ -132,7 +134,7 @@ class SerialPort {
     }
     async ReadExisting(addNewLine = true) {
         return await new Promise((resolve, reject) => {
-            var bufferData = "";
+            var bufferData = this.LastLine;
             while (this.myQueue.size() > 0) {
                 bufferData += this.myQueue.dequeue().toString();
                 if (addNewLine)
