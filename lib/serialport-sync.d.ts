@@ -7,8 +7,10 @@ export declare class SerialPort {
     myQueue: Collections.Queue<{}>;
     currentData: string;
     port: serialport;
+    private isOpen;
     constructor(comPort: string, baudRate: number, showDebugData?: boolean);
     GetPendingLines(): number;
+    IsOpen(): boolean;
     Open(): Promise<void>;
     READLINE_RETRY_COUNT: number;
     READLINE_RETRY_DELAY: number;

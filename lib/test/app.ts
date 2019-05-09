@@ -5,13 +5,17 @@ var serial = new SerialPort.SerialPort("COM4", 115200, false);
 main();
 
 async function main() {
+    console.log(serial.IsOpen());
+
     await serial.Open();
 
-    await serial.WriteLine('f0');
+    console.log(serial.IsOpen());
+
+    await serial.Write('f0');
 
     await serial.Delay(500);
 
-    await serial.WriteLine('f?');
+    await serial.Write('f?');
 
     await serial.Delay(500);
 

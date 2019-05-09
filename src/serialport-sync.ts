@@ -9,6 +9,7 @@ export class SerialPort {
     myQueue = new Collections.Queue();
     currentData = "";
     port: serialport;
+    private isOpen = false;
 
     constructor(public comPort: string, public baudRate: number, public showDebugData: boolean = false) {
         this.myQueue = new Collections.Queue();
@@ -18,6 +19,10 @@ export class SerialPort {
 
     public GetPendingLines(): number {
         return this.myQueue.size();
+    }
+
+    public IsOpen() {
+        return this.isOpen;
     }
 
     public async Open() {
@@ -38,8 +43,9 @@ export class SerialPort {
         });
 
         await new Promise((resolve, reject) => {
-            this.port.on('open', function () {
-                if (this.showDebugData) console.log("opened : " + this.path);
+            this.port.on('open', () => {
+                if (this.showDebugData) console.log("opened : " + this.comPort);
+                this.isOpen = true;
                 resolve(true);
             });
         });

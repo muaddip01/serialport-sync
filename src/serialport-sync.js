@@ -11,6 +11,7 @@ class SerialPort {
         this.showDebugData = showDebugData;
         this.myQueue = new Collections.Queue();
         this.currentData = "";
+        this.isOpen = false;
         this.READLINE_RETRY_COUNT = 10;
         this.READLINE_RETRY_DELAY = 20;
         this.LastLine = "";
@@ -19,6 +20,9 @@ class SerialPort {
     }
     GetPendingLines() {
         return this.myQueue.size();
+    }
+    IsOpen() {
+        return this.isOpen;
     }
     async Open() {
         if (this.showDebugData)
@@ -38,9 +42,10 @@ class SerialPort {
             this.currentData = this.ShowExisting();
         });
         await new Promise((resolve, reject) => {
-            this.port.on('open', function () {
+            this.port.on('open', () => {
                 if (this.showDebugData)
-                    console.log("opened : " + this.path);
+                    console.log("opened : " + this.comPort);
+                this.isOpen = true;
                 resolve(true);
             });
         });
