@@ -9,7 +9,7 @@ export class SerialPort {
     myQueue = new Collections.Queue();
     currentData = "";
     port: serialport;
-    private isOpen = false;
+    private _isOpen = false;
 
     constructor(public comPort: string, public baudRate: number, public showDebugData: boolean = false) {
         this.myQueue = new Collections.Queue();
@@ -22,7 +22,7 @@ export class SerialPort {
     }
 
     public IsOpen() {
-        return this.isOpen;
+        return this._isOpen;
     }
 
     public async Open() {
@@ -45,7 +45,7 @@ export class SerialPort {
         await new Promise((resolve, reject) => {
             this.port.on('open', () => {
                 if (this.showDebugData) console.log("opened : " + this.comPort);
-                this.isOpen = true;
+                this._isOpen = true;
                 resolve(true);
             });
         });
@@ -156,22 +156,29 @@ export class SerialPort {
         return all;
     }
 
-    async ReadExisting(addNewLine: boolean = true): Promise<string> {
-        return await new Promise<string>((resolve, reject) => {
-            var bufferData = this.LastLine;
-            while (this.myQueue.size() > 0) {
-                bufferData += this.myQueue.dequeue().toString();
-                if (addNewLine) bufferData += '\n';
-            }
-            if (this.showDebugData) console.log("IN MSG : " + bufferData);
+    async ReadExisting(addNewLine: boolean = true) {
 
+        var bufferData = this.LastLine;
+        while (this.myQueue.size() > 0) {
+            bufferData += this.myQueue.dequeue().toString();
+            if (addNewLine) bufferData += '\n';
+        }
+        if (this.showDebugData) console.log("IN MSG : " + bufferData);
+
+
+        return bufferData;
+    }
+
+    async Flush() {
+        return await new Promise((resolve, reject) => {
             this.port.flush((err) => {
                 if (err !== null) {
                     console.log("serial flush error");
+                    console.log(err);
                     reject(err);
                 }
                 else {
-                    resolve(bufferData);
+                    resolve();
                 }
             });
         });

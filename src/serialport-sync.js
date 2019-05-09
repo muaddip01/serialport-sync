@@ -11,7 +11,7 @@ class SerialPort {
         this.showDebugData = showDebugData;
         this.myQueue = new Collections.Queue();
         this.currentData = "";
-        this.isOpen = false;
+        this._isOpen = false;
         this.READLINE_RETRY_COUNT = 10;
         this.READLINE_RETRY_DELAY = 20;
         this.LastLine = "";
@@ -22,7 +22,7 @@ class SerialPort {
         return this.myQueue.size();
     }
     IsOpen() {
-        return this.isOpen;
+        return this._isOpen;
     }
     async Open() {
         if (this.showDebugData)
@@ -45,7 +45,7 @@ class SerialPort {
             this.port.on('open', () => {
                 if (this.showDebugData)
                     console.log("opened : " + this.comPort);
-                this.isOpen = true;
+                this._isOpen = true;
                 resolve(true);
             });
         });
@@ -138,22 +138,26 @@ class SerialPort {
         return all;
     }
     async ReadExisting(addNewLine = true) {
+        var bufferData = this.LastLine;
+        while (this.myQueue.size() > 0) {
+            bufferData += this.myQueue.dequeue().toString();
+            if (addNewLine)
+                bufferData += '\n';
+        }
+        if (this.showDebugData)
+            console.log("IN MSG : " + bufferData);
+        return bufferData;
+    }
+    async Flush() {
         return await new Promise((resolve, reject) => {
-            var bufferData = this.LastLine;
-            while (this.myQueue.size() > 0) {
-                bufferData += this.myQueue.dequeue().toString();
-                if (addNewLine)
-                    bufferData += '\n';
-            }
-            if (this.showDebugData)
-                console.log("IN MSG : " + bufferData);
             this.port.flush((err) => {
                 if (err !== null) {
                     console.log("serial flush error");
+                    console.log(err);
                     reject(err);
                 }
                 else {
-                    resolve(bufferData);
+                    resolve();
                 }
             });
         });

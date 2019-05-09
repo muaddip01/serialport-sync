@@ -19,7 +19,16 @@ async function main() {
 
     await serial.Delay(500);
 
+    await serial.Write('f0');
+
+    await serial.Delay(500);
+
+    await serial.Write('f?');
+
+    await serial.Delay(500);
 
     var res = await serial.ReadExisting();
     console.log(res);
+
+    console.log('done');
 }
