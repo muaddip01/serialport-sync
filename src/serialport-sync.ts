@@ -159,12 +159,12 @@ export class SerialPort {
     async ReadExisting(addNewLine: boolean = true) {
 
         var bufferData = this.LastLine;
+        this.LastLine = "";
         while (this.myQueue.size() > 0) {
             bufferData += this.myQueue.dequeue().toString();
             if (addNewLine) bufferData += '\n';
         }
         if (this.showDebugData) console.log("IN MSG : " + bufferData);
-
 
         return bufferData;
     }

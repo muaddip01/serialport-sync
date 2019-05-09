@@ -139,6 +139,7 @@ class SerialPort {
     }
     async ReadExisting(addNewLine = true) {
         var bufferData = this.LastLine;
+        this.LastLine = "";
         while (this.myQueue.size() > 0) {
             bufferData += this.myQueue.dequeue().toString();
             if (addNewLine)
