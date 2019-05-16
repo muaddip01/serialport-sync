@@ -9,6 +9,7 @@ export declare class SerialPort {
     port: serialport;
     private _isOpen;
     constructor(comPort: string, baudRate: number, showDebugData?: boolean);
+    static GetSerialPorts(): Promise<string[]>;
     GetPendingLines(): number;
     IsOpen(): boolean;
     Open(): Promise<void>;

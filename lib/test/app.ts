@@ -5,6 +5,9 @@ var serial = new SerialPort.SerialPort("COM4", 115200, false);
 main();
 
 async function main() {
+
+    console.log(await SerialPort.SerialPort.GetSerialPorts());
+
     console.log(serial.IsOpen());
 
     await serial.Open();

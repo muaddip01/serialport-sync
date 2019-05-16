@@ -18,6 +18,14 @@ class SerialPort {
         this.myQueue = new Collections.Queue();
         this.currentData = "";
     }
+    static async GetSerialPorts() {
+        var comPorts = [];
+        var serialObjs = await serialport.list();
+        for (var i = 0; i < serialObjs.length; i++) {
+            comPorts.push(serialObjs[i].comName);
+        }
+        return comPorts;
+    }
     GetPendingLines() {
         return this.myQueue.size();
     }

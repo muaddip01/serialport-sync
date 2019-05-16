@@ -17,7 +17,20 @@ export class SerialPort {
 
     }
 
+    public static async  GetSerialPorts() {
+        var comPorts: string[] = [];
+        var serialObjs = await serialport.list();
+
+        for (var i = 0; i < serialObjs.length; i++) {
+            comPorts.push(serialObjs[i].comName);
+        }
+
+        return comPorts;
+    }
+
+
     public GetPendingLines(): number {
+
         return this.myQueue.size();
     }
 

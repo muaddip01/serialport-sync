@@ -8,13 +8,15 @@ npm i serialport-sync --save
 ## Usage
 
 ```
-import serialSync = require("serialport-sync");
+var SerialPort = require("serialport-sync");
 
 var serial = new SerialPort.SerialPort("COM4", 115200, false);
 
 main();
 
 async function main() {
+    console.log(await SerialPort.SerialPort.GetSerialPorts());
+
     await serial.Open();
 
     await serial.WriteLine('f0');
