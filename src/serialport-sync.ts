@@ -51,7 +51,9 @@ export class SerialPort {
             var str = data.toString('utf8');
             if (this.showDebugData) console.log(this.comPort + ' PARSER : ' + str);
             this.LastLine += str;
-            if (str === '\r') this.myQueue.enqueue(this.LastLine);
+            // if (str === '\r') {
+            //     this.myQueue.enqueue(this.LastLine);
+            // }
             this.currentData = this.ShowExisting();
         });
 
@@ -170,16 +172,19 @@ export class SerialPort {
     }
 
     async ReadExisting(addNewLine: boolean = true) {
-
-        var bufferData = this.LastLine;
+        var data = this.LastLine;
         this.LastLine = "";
-        while (this.myQueue.size() > 0) {
-            bufferData += this.myQueue.dequeue().toString();
-            if (addNewLine) bufferData += '\n';
-        }
-        if (this.showDebugData) console.log("IN MSG : " + bufferData);
+        return data;
 
-        return bufferData;
+        // var bufferData = this.LastLine;
+        // this.LastLine = "";
+        // while (this.myQueue.size() > 0) {
+        //     bufferData += this.myQueue.dequeue().toString();
+        //     if (addNewLine) bufferData += '\n';
+        // }
+        // if (this.showDebugData) console.log("IN MSG : " + bufferData);
+
+        // return this.LastLine;
     }
 
     async Flush() {
