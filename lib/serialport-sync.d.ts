@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import serialport = require('serialport');
 import * as Collections from 'typescript-collections';
 export declare class SerialPort {
@@ -15,16 +16,16 @@ export declare class SerialPort {
     Open(): Promise<void>;
     READLINE_RETRY_COUNT: number;
     READLINE_RETRY_DELAY: number;
-    LastLine: string;
-    ReadLastLine(): string;
+    LastLine: Array<any>;
+    ReadLastLine(): Buffer;
     ReadLine(ignoreEcho?: boolean): Promise<string>;
     WriteLine(data: string): Promise<number>;
     CloseAndTest(): Promise<void>;
     Close(): Promise<void>;
     Write(data: string): void;
-    Query(data: any, delayAfterWrite: any): Promise<string>;
+    Query(data: any, delayAfterWrite: any): Promise<Buffer>;
     Delay(milliseconds: number): Promise<void>;
     ShowExisting(): string;
-    ReadExisting(addNewLine?: boolean): Promise<string>;
+    ReadExisting(addNewLine?: boolean): Promise<Buffer>;
     Flush(): Promise<{}>;
 }

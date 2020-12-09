@@ -1,3 +1,4 @@
+import { List } from 'immutable';
 import serialport = require('serialport');
 import * as Collections from 'typescript-collections';
 
@@ -48,12 +49,8 @@ export class SerialPort {
         const parser = (this.port as any).pipe(new ByteLength({ length: 1 }));
 
         parser.on('data', (data: Buffer) => {
-            var str = data.toString('utf8');
-            if (this.showDebugData) console.log(this.comPort + ' PARSER : ' + str);
-            this.LastLine += str;
-            // if (str === '\r') {
-            //     this.myQueue.enqueue(this.LastLine);
-            // }
+            if (this.showDebugData) console.log(this.comPort + ' PARSER : ', data);
+            this.LastLine.push(data);
             this.currentData = this.ShowExisting();
         });
 
@@ -69,12 +66,12 @@ export class SerialPort {
     READLINE_RETRY_COUNT = 10;
     READLINE_RETRY_DELAY = 20;
 
-    LastLine: string = "";
+    LastLine: Array<any> = [];
 
     ReadLastLine() {
         var lastLineTemp = this.LastLine;
-        this.LastLine = "";
-        return lastLineTemp;
+        this.LastLine = [];
+        return Buffer.concat(lastLineTemp, lastLineTemp.length);
     }
 
     async ReadLine(ignoreEcho: boolean = false): Promise<string> {
@@ -96,7 +93,7 @@ export class SerialPort {
     }
 
     async WriteLine(data: string): Promise<number> {
-        if (this.showDebugData) console.log("OUT MSG : " + data);
+        if (this.showDebugData) console.log("OUT MSG : ", data);
         return await new Promise<number>((resolve, reject) => {
             this.port.write(data + '\r\n', (err, bytes) => {
                 if (err !== undefined) {
@@ -145,7 +142,7 @@ export class SerialPort {
     }
 
     Write(data: string) {
-        if (this.showDebugData) console.log("OUT MSG : " + data);
+        if (this.showDebugData) console.log("OUT MSG : ", data);
         this.port.write(data);
     }
 
@@ -173,18 +170,8 @@ export class SerialPort {
 
     async ReadExisting(addNewLine: boolean = true) {
         var data = this.LastLine;
-        this.LastLine = "";
-        return data;
-
-        // var bufferData = this.LastLine;
-        // this.LastLine = "";
-        // while (this.myQueue.size() > 0) {
-        //     bufferData += this.myQueue.dequeue().toString();
-        //     if (addNewLine) bufferData += '\n';
-        // }
-        // if (this.showDebugData) console.log("IN MSG : " + bufferData);
-
-        // return this.LastLine;
+        this.LastLine = [];
+        return Buffer.concat(data, data.length);
     }
 
     async Flush() {

@@ -1,13 +1,14 @@
 {
   "author": "harel.ashwal",
   "name": "serialport-sync",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "serialport sync wrapper",
   "main": "lib/serialport-sync.js",
   "types": "lib/serialport-sync.d.ts",
   "dependencies": {
     "serialport": "^7.1.5",
-    "typescript-collections": "^1.3.2"
+    "typescript-collections": "^1.3.2",
+    "immutable": "^4.0.0-rc.12"
   },
   "devDependencies": {
     "@types/jest": "^23.3.9",
