@@ -1,10 +1,5 @@
 serialport-sync Driver For NodeJS
 
-## Installation
-```
-npm i serialport-sync --save
-```
-
 ## Usage
 
 ```
